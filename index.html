@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baccarat Road — เค้าหลัก & เค้ารองพร้อมค้นหา</title>
+  <meta name="description" content="บันทึกผลบาคาร่า + แสดงเค้าหลัก/เค้ารอง (Big Eye, Small, Cockroach) และค้นหา pattern BBPP เพื่อตรวจว่าตาถัดไปออกอะไร" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>📊 Baccarat Road</h1>
+    <div class="controls">
+      <button id="btnP" class="btn p">P</button>
+      <button id="btnB" class="btn b">B</button>
+      <button id="btnT" class="btn t">T</button>
+      <button id="btnUndo" class="btn ghost">Undo</button>
+      <button id="btnClear" class="btn danger">ล้างทั้งหมด</button>
+      <button id="btnExport" class="btn ghost">ส่งออก</button>
+      <label class="btn ghost">
+        นำเข้า <input id="importInput" type="file" accept="application/json" hidden>
+      </label>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Manual input panel -->
+    <section class="card">
+      <h2>โหมดกรอกเอง</h2>
+      <label style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+        <input id="manualToggle" type="checkbox">
+        <span>ใช้ข้อมูลกรอกเอง (แทนค่าที่คำนวณอัตโนมัติในเค้ารอง & ใช้ในการค้นหา)</span>
+      </label>
+
+      <div class="manual-panel" style="display:grid;gap:10px;grid-template-columns:repeat(4,1fr);margin-bottom:6px;">
+        <div class="box">
+          <h4 style="margin:4px 0">เค้าหลัก</h4>
+          <div class="controls" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button id="mP" class="btn p">P</button>
+            <button id="mB" class="btn b">B</button>
+            <button id="mT" class="btn t">T</button>
+            <button id="mMain_Undo" class="btn ghost">Undo</button>
+            <button id="mMain_Clear" class="btn danger">ล้าง</button>
+          </div>
+        </div>
+        <div class="box">
+          <h4 style="margin:4px 0">Big Eye (กรอกเอง)</h4>
+          <div class="controls" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button id="mBE_B" class="btn b">B</button>
+            <button id="mBE_P" class="btn p">P</button>
+            <button id="mBE_Undo" class="btn ghost">Undo</button>
+            <button id="mBE_Clear" class="btn danger">ล้าง</button>
+          </div>
+        </div>
+        <div class="box">
+          <h4 style="margin:4px 0">Small (กรอกเอง)</h4>
+          <div class="controls" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button id="mSM_B" class="btn b">B</button>
+            <button id="mSM_P" class="btn p">P</button>
+            <button id="mSM_Undo" class="btn ghost">Undo</button>
+            <button id="mSM_Clear" class="btn danger">ล้าง</button>
+          </div>
+        </div>
+        <div class="box">
+          <h4 style="margin:4px 0">Cockroach (กรอกเอง)</h4>
+          <div class="controls" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button id="mCR_B" class="btn b">B</button>
+            <button id="mCR_P" class="btn p">P</button>
+            <button id="mCR_Undo" class="btn ghost">Undo</button>
+            <button id="mCR_Clear" class="btn danger">ล้าง</button>
+          </div>
+        </div>
+      </div>
+      <small class="muted">หมายเหตุ: เมื่อเปิดสวิตช์นี้ กระดานเค้ารอง 3 แบบและผลการค้นหาจะใช้ค่าที่คุณกรอกเองแทนค่าที่คำนวณจากเค้าหลัก</small>
+    </section>
+
+    <!-- Search card -->
+    <section class="card">
+      <h2>🔎 ค้นหาแพทเทิร์นข้าม 4 ช่อง</h2>
+      <p class="muted">พิมพ์ 4 ตัวอักษรสำหรับ (ช่อง1..4): <b>เค้าหลัก</b>, <b>Big Eye</b>, <b>Small</b>, <b>Cockroach</b> — ใช้เฉพาะ <code>B</code> หรือ <code>P</code> (ไม่รองรับ T ในการค้นหา)</p>
+      <div class="searchbar">
+        <input id="searchInput" type="text" maxlength="4" placeholder="เช่น bbpp" />
+        <button id="btnSearch" class="btn">ค้นหา</button>
+      </div>
+      <div id="searchSummary" class="search-summary"></div>
+      <div id="searchMatches" class="matches"></div>
+    </section>
+
+    <section class="grid">
+      <div class="board card">
+        <h3>1) เค้าหลัก (Big Road)</h3>
+        <div id="bigRoad" class="road"></div>
+      </div>
+      <div class="board card">
+        <h3>2) Big Eye Road</h3>
+        <div id="bigEye" class="road"></div>
+      </div>
+      <div class="board card">
+        <h3>3) Small Road</h3>
+        <div id="smallRoad" class="road"></div>
+      </div>
+      <div class="board card">
+        <h3>4) Cockroach Road</h3>
+        <div id="cockroach" class="road"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>ประวัติผล</h2>
+      <div id="history" class="history"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <small>เก็บข้อมูลไว้ในเครื่อง (localStorage) — ทำงานออฟไลน์ได้ — โค้ดเวอร์ชันตัวอย่าง</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
