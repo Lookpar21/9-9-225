@@ -52,9 +52,7 @@ body {
 
 .board h3 { margin: 6px 0 12px; }
 .road {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(6, 22px);
+  display: flex;
   gap: 2px;
   overflow-x: auto;
   padding-bottom: 6px;
@@ -62,7 +60,11 @@ body {
   border-radius: 8px;
   background: #0b1220;
 }
-
+.col {
+  display: grid;
+  grid-template-rows: repeat(6, 22px);  
+  gap: 2px;
+}
 .cell {
   width: 22px; height: 22px; display: grid; place-items: center;
   border: 1px solid #0f1a2a; border-radius: 4px;
